@@ -1,0 +1,16 @@
+<h2>New Remittance</h2>
+<div>
+  <label>Recipient:
+    <input (input)='recipient = $event.target.value' placeholder="Ethereum address of recipient"/>
+  </label>
+
+  <label>Amount:
+    <input (input)='amount = $event.target.value' placeholder="Amount to remit, in ETH"/>
+  </label>
+
+  <label>OTP:
+    <input (input)='otp_secret = $event.target.value' placeholder="Secret passphrase"/>
+  </label>
+
+  <button (click)="onNewRemittanceClick()">New Remittance</button>
+</div>
