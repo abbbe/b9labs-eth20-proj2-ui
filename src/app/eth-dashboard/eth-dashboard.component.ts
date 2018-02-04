@@ -18,30 +18,30 @@ export class EthDashboardComponent implements OnInit {
   ngOnInit() {
     // get network ID
     window.web3.version.getNetwork((err, _networkId) => this.ngZone.run(() => {
-      console.log("Network ID:", _networkId)
+      // console.log("Network ID:", _networkId)
       this.networkId = _networkId;
     }));
 
     // get account info
     window.web3.eth.getAccounts((err, _accounts) => this.ngZone.run(() => {
-      console.log("Accounts:", _accounts)
+      // console.log("Accounts:", _accounts)
       this.accountAddress = _accounts[0];
 
       // get balance
       window.web3.eth.getBalance(this.accountAddress, (err, _balance) => this.ngZone.run(() => {
-        console.log("Balance:", _balance)
+        // console.log("Balance:", _balance)
         this.accountBalance = window.web3.fromWei(_balance, 'ether');
       }));
     }));
 
     // watch blocks and update last_block number
     window.web3.eth.filter("latest", (err, blockHash) => this.ngZone.run(() => {
-      console.log("Block hash:", blockHash);
+      // console.log("Block hash:", blockHash);
       if (err) {
         this.lastBlock = -1;
       } else {
         window.web3.eth.getBlock(blockHash, (error, block) => this.ngZone.run(() => {
-          console.log("Block number:", block.number);
+          // console.log("Block number:", block.number);
           if (err) {
             this.lastBlock = -1;
           } else {
