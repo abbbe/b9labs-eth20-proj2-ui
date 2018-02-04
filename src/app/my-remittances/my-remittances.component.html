@@ -15,6 +15,6 @@
     <td>{{r.recipient}}</td>
     <td>{{r.amount}}</td>
     <td>{{r.otpHash}}</td>
-    <td><button onClick="onRevokeClicked(r.otpHash)">Revoke</button></td>
+    <td><button (click)="onRevokeClicked(r.otpHash)">Revoke</button></td>
   </tr>
 </table>
