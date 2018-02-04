@@ -26,6 +26,12 @@ export class EthDashboardComponent implements OnInit {
     window.web3.eth.getAccounts((err, _accounts) => this.ngZone.run(() => {
       console.log("Accounts:", _accounts)
       this.accountAddress = _accounts[0];
+
+      // get balance
+      window.web3.eth.getBalance(this.accountAddress, (err, _balance) => this.ngZone.run(() => {
+        console.log("Balance:", _balance)
+        this.accountBalance = window.web3.fromWei(_balance, 'ether');
+      }));
     }));
 
     // watch blocks and update last_block number
