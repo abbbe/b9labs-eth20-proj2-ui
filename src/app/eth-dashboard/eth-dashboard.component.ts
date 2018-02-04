@@ -23,5 +23,22 @@ export class EthDashboardComponent implements OnInit {
       console.log("Network ID:", _networkId)
       this.networkId = _networkId;
     }));
+
+    // watch blocks and update last_block number
+    window.web3.eth.filter("latest", (err, blockHash) => this.ngZone.run(() => {
+      console.log("Block hash:", blockHash);
+      if (err) {
+        this.lastBlock = -1;
+      } else {
+        window.web3.eth.getBlock(blockHash, (error, block) => this.ngZone.run(() => {
+          console.log("Block number:", block.number);
+          if (err) {
+            this.lastBlock = -1;
+          } else {
+            this.lastBlock = block.number;
+          }
+        }));
+      }
+    }));
   }
 }
