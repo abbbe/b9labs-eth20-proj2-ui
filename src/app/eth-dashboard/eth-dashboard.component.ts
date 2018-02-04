@@ -1,5 +1,4 @@
 import { Component, OnInit, NgZone } from '@angular/core';
-import { Web3Service } from '../web3.service';
 
 @Component({
   selector: 'app-eth-dashboard',
@@ -13,15 +12,20 @@ export class EthDashboardComponent implements OnInit {
   ownerAddress: string
   accountAddress: string
   accountBalance: number
-  otherAccounts: string[]
 
   constructor(private ngZone: NgZone) { }
 
   ngOnInit() {
-    var self = this;
+    // get network ID
     window.web3.version.getNetwork((err, _networkId) => this.ngZone.run(() => {
       console.log("Network ID:", _networkId)
       this.networkId = _networkId;
+    }));
+
+    // get account info
+    window.web3.eth.getAccounts((err, _accounts) => this.ngZone.run(() => {
+      console.log("Accounts:", _accounts)
+      this.accountAddress = _accounts[0];
     }));
 
     // watch blocks and update last_block number

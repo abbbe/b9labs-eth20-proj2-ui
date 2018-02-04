@@ -18,15 +18,12 @@
 
 <div>
   <label>Account:
-    <span id="accountAddress"></span>
-  </label>
-  <label>Account balance:
-    <span id="accountBalance"></span>
+    <span>{{accountAddress}}</span>
   </label>
 </div>
 
 <div>
-  <label>Other accounts:
-    <span *ngFor="let acc of otherAccounts">{{acc}}</span>
+  <label>Account balance:
+    <span>{{accountBalance}}</span>
   </label>
 </div>
