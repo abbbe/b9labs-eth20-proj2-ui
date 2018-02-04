@@ -1,3 +1,8 @@
-<p>
-  new-claim works!
-</p>
+<h2>New Claim</h2>
+<div>
+  <label>OTP Secret:
+    <input (input)='otp_secret = $event.target.value' placeholder="Secret passphrase"/>
+  </label>
+
+  <button (click)="onNewClaimClick()">New Claim</button>
+</div>

@@ -6,10 +6,16 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./new-claim.component.css']
 })
 export class NewClaimComponent implements OnInit {
+  otp_secret: string;
 
   constructor() { }
 
   ngOnInit() {
   }
 
+  onNewClaimClick(): void {
+    console.log('onNewClaimClick() runs, claim:',
+      this.otp_secret);
+    // FIXME: call contract here
+  }
 }
