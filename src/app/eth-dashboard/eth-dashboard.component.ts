@@ -50,5 +50,10 @@ export class EthDashboardComponent implements OnInit {
         }));
       }
     }));
+
+    const truffleContract = require('truffle-contract');
+    const remittanceArtifacts = require('../../../../b9labs-eth20-proj2/build/contracts/Remittance.json');
+    const Remittance = truffleContract(remittanceArtifacts);
+    Remittance.setProvider(window.web3.currentProvider);
   }
 }
