@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, NgZone } from '@angular/core';
+import { Web3Service } from '../web3.service';
 
 @Component({
   selector: 'app-eth-dashboard',
@@ -6,7 +7,7 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./eth-dashboard.component.css']
 })
 export class EthDashboardComponent implements OnInit {
-  networkId: string
+  networkId: string = "N/A"
   lastBlock: number
   contractAddress: string
   ownerAddress: string
@@ -14,9 +15,13 @@ export class EthDashboardComponent implements OnInit {
   accountBalance: number
   otherAccounts: string[]
 
-  constructor() { }
+  constructor(private ngZone: NgZone) { }
 
   ngOnInit() {
-    // FIXME link to network events
+    var self = this;
+    window.web3.version.getNetwork((err, _networkId) => this.ngZone.run(() => {
+      console.log("Network ID:", _networkId)
+      this.networkId = _networkId;
+    }));
   }
 }
