@@ -1,3 +1,20 @@
-<p>
-  my-remittances works!
-</p>
+<h2>My Remittances</h2>
+
+<table class="table">
+  <tr>
+    <th>#</th>
+    <th>Sender</th>
+    <th>Recipient</th>
+    <th>Amount</th>
+    <th>OTP Hash</th>
+    <th></th>
+  </tr>
+  <tr *ngFor="let r of remittances; let i = index">
+    <td>{{i + 1}}</td>
+    <td>{{r.sender}}</td>
+    <td>{{r.recipient}}</td>
+    <td>{{r.amount}}</td>
+    <td>{{r.otpHash}}</td>
+    <td><button onClick="onRevokeClicked(r.otpHash)">Revoke</button></td>
+  </tr>
+</table>
