@@ -7,6 +7,7 @@ import { NewRemittanceComponent } from './new-remittance/new-remittance.componen
 import { MyRemittancesComponent } from './my-remittances/my-remittances.component';
 import { NewClaimComponent } from './new-claim/new-claim.component';
 import { MyClaimsComponent } from './my-claims/my-claims.component';
+import { EthDashboardComponent } from './eth-dashboard/eth-dashboard.component';
 
 
 @NgModule({
@@ -15,7 +16,8 @@ import { MyClaimsComponent } from './my-claims/my-claims.component';
     NewRemittanceComponent,
     MyRemittancesComponent,
     NewClaimComponent,
-    MyClaimsComponent
+    MyClaimsComponent,
+    EthDashboardComponent
   ],
   imports: [
     BrowserModule

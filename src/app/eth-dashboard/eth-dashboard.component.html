@@ -1,0 +1,32 @@
+<div>
+  <label>Network ID:
+    <span id="networkId"></span>
+  </label>
+  <label>Last block:
+    <span id="lastBlock"></span>
+  </label>
+</div>
+
+<div>
+  <label>Contract:
+    <span id="contractAddress"></span>
+  </label>
+  <label>Contract owner:
+    <span id="ownerAddress"></span>
+  </label>
+</div>
+
+<div>
+  <label>Account:
+    <span id="accountAddress"></span>
+  </label>
+  <label>Account balance:
+    <span id="accountBalance"></span>
+  </label>
+</div>
+
+<div>
+  <label>Other accounts:
+    <span *ngFor="let acc of otherAccounts">{{acc}}</span>
+  </label>
+</div>
