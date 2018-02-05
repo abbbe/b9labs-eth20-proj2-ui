@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Subject } from 'rxjs/Subject';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 declare global {
   interface Window { web3: any; }
@@ -15,9 +15,10 @@ window.web3 = window.web3 || {};
 export class Web3Service {
   web3: any;
 
-  networkId: Subject<number> = new Subject<number>();
-  accountAddress: Subject<string> = new Subject<string>();
-  accountBalance: Subject<number> = new Subject<number>();
+  networkId: BehaviorSubject<number> = new BehaviorSubject<number>(-1);
+  lastBlock: BehaviorSubject<number> = new BehaviorSubject<number>(-1);
+  accountAddress: BehaviorSubject<string> = new BehaviorSubject<string>("?");
+  accountBalance: BehaviorSubject<number> = new BehaviorSubject<number>(-1);
 
   constructor() {
     this.web3 = window.web3;
@@ -59,22 +60,24 @@ export class Web3Service {
       }
     });
 
-    // // watch blocks and update last_block number
-    // window.web3.eth.filter("latest", (err, blockHash) => this.ngZone.run(() => {
-    //   // console.log("Block hash:", blockHash);
-    //   if (err) {
-    //     this.lastBlock = -1;
-    //   } else {
-    //     window.web3.eth.getBlock(blockHash, (error, block) => this.ngZone.run(() => {
-    //       // console.log("Block number:", block.number);
-    //       if (err) {
-    //         this.lastBlock = -1;
-    //       } else {
-    //         this.lastBlock = block.number;
-    //       }
-    //     }));
-    //   }
-    // }));    
+    // watch blocks and update last_block number
+    window.web3.eth.filter("latest", (err, blockHash) => {
+      if (err) {
+        // console.log("filter error", err);
+        this.lastBlock.next(-1);
+      } else {
+        // console.log("Block hash:", blockHash);
+        window.web3.eth.getBlock(blockHash, (error, block) => {
+          if (err) {
+            // console.log("getBlock() error:", err);
+            this.lastBlock.next(-1);
+          } else {
+            // console.log("Block number:", block.number);
+            this.lastBlock.next(block.number);
+          }
+        });
+      }
+    });
   }
 
   getWeb3() {
