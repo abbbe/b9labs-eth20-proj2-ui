@@ -29,12 +29,17 @@ export class NewRemittanceComponent implements OnInit {
     let otpHash = Remittance.secretToOtpHash(this.otpSecret, this.recipient);
     let r = new Remittance(this.sender, this.recipient, this.amount, otpHash);
 
+    var txHash;
     this.busy = this.remittanceService.remit(r)
-      .then(txHash => this.zone.run(() => {
+      .then(_txHash => this.zone.run(() => {
+        txHash = _txHash;
         this.remitTxState = "Transaction " + txHash + " pending";
-        //   return this.web3Service.getTransactionReceiptMined(txHash);
-        // })).then(receipt => this.zone.run(() => {
-        //   this.remitTxState = "Status: " + receipt.status;
+
+        // leave "background" promise
+        this.web3Service.getTransactionReceiptMined(txHash)
+          .then(receipt => this.zone.run(() => {
+            this.remitTxState = "Transaction " + txHash + " mined, status: " + receipt.status;
+          }));
       }))
       .catch(err => alert(err));
   }
