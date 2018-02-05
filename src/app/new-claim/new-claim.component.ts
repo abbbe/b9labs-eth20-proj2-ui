@@ -6,7 +6,7 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./new-claim.component.css']
 })
 export class NewClaimComponent implements OnInit {
-  otp_secret: string;
+  otpSecret: string;
 
   constructor() { }
 
@@ -14,8 +14,7 @@ export class NewClaimComponent implements OnInit {
   }
 
   onNewClaimClick(): void {
-    console.log('onNewClaimClick() runs, claim:',
-      this.otp_secret);
+    console.log('onNewClaimClick() runs, claim:', this.otpSecret);
     // FIXME: call contract here
   }
 }
