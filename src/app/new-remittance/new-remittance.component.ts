@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { Remittance } from '../remittance';
 
 @Component({
   selector: 'app-new-remittance',

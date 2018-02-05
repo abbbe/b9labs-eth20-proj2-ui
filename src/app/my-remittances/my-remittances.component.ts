@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Remittance } from '../remittance';
+import { RemittanceService, Remittance } from '../remittance.service';
 
 @Component({
   selector: 'app-my-remittances',
@@ -9,11 +9,11 @@ import { Remittance } from '../remittance';
 export class MyRemittancesComponent implements OnInit {
   remittances: Remittance[] = new Array<Remittance>()
 
-  constructor() { }
+  constructor(private remittanceService: RemittanceService) { }
 
   ngOnInit() {
-    // FIXME pupulate from events
-    this.remittances.push(new Remittance('x-sender', 'x-recipient', 1, 'x-otphash'));
+    this.remittanceService.remittances.subscribe(_remittances =>
+      this.remittances = _remittances);
   }
 
   onRevokeClicked(otpHash) {
