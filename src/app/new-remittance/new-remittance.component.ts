@@ -22,6 +22,7 @@ export class NewRemittanceComponent implements OnInit {
   onNewRemittanceClick(): void {
     console.log('onNewRemittanceClick(): recipient=', this.recipient,
       'amount=', this.amount, 'otpSecret=', this.otpSecret);
+    // FIXME validate user input
 
     let otpHash = Remittance.secretToOtpHash(this.otpSecret, this.recipient);
     let r = new Remittance(this.sender, this.recipient, this.amount, otpHash);

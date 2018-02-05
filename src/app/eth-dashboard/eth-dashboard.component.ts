@@ -31,7 +31,6 @@ export class EthDashboardComponent implements OnInit {
     ));
 
     this.web3Service.lastBlock.subscribe(_lastBlock => this.zone.run(() => {
-      console.log(_lastBlock);
       this.lastBlock = _lastBlock;
     }));
 

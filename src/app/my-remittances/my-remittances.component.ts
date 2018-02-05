@@ -13,7 +13,6 @@ export class MyRemittancesComponent implements OnInit {
 
   ngOnInit() {
     this.remittanceService.remittances.subscribe(_remittances => this.zone.run(() => {
-      console.log(_remittances);
       this.remittances = _remittances;
     }));
   }
