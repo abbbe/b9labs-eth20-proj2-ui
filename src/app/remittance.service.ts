@@ -103,17 +103,8 @@ export class RemittanceService {
   }
 
   public remit(r: Remittance) {
-    var self = this;
-
-    console.log(r);
-
     let amount = window.web3.toWei(r.amount, 'ether');
-    this.instance.remit.sendTransaction(r.otpHash, r.recipient,
-      { from: r.sender, value: amount })
-      .then(txObj => {
-        console.log(txObj);
-      }).catch(err => {
-        console.log(err);
-      });
+    return this.instance.remit.sendTransaction(r.otpHash, r.recipient,
+      { from: r.sender, value: amount });
   }
 }
