@@ -68,7 +68,7 @@ export class RemittanceService {
   }
 
   private startWatchingRemittances(account: string) {
-    console.log("Watching for LogRemittance for sender", account);
+    // console.log("Watching for LogRemittance for sender", account);
     this.instance.LogRemittance({ sender: account }, { fromBlock: 0 })
       .watch((err, event) => {
         if (err) {
