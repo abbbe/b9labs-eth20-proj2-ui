@@ -8,6 +8,8 @@ import { MyRemittancesComponent } from './my-remittances/my-remittances.componen
 import { NewClaimComponent } from './new-claim/new-claim.component';
 import { MyClaimsComponent } from './my-claims/my-claims.component';
 import { EthDashboardComponent } from './eth-dashboard/eth-dashboard.component';
+import { RemittanceService } from './remittance.service';
+import { Web3Service } from './web3.service';
 
 
 @NgModule({
@@ -22,7 +24,7 @@ import { EthDashboardComponent } from './eth-dashboard/eth-dashboard.component';
   imports: [
     BrowserModule
   ],
-  providers: [],
+  providers: [Web3Service, RemittanceService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
