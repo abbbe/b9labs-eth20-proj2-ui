@@ -13,7 +13,7 @@
     <td>{{i + 1}}</td>
     <td>{{r.sender}}</td>
     <td>{{r.recipient}}</td>
-    <td>{{r.amount}}</td>
+    <td>r.amount.getAmountEth()</td>
     <td>{{r.otpHash}}</td>
     <td><button (click)="onRevokeClicked(r.otpHash)">Revoke</button></td>
   </tr>

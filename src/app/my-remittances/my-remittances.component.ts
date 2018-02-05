@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, NgZone } from '@angular/core';
 import { RemittanceService, Remittance } from '../remittance.service';
 
 @Component({
@@ -9,11 +9,13 @@ import { RemittanceService, Remittance } from '../remittance.service';
 export class MyRemittancesComponent implements OnInit {
   remittances: Remittance[] = new Array<Remittance>()
 
-  constructor(private remittanceService: RemittanceService) { }
+  constructor(private zone: NgZone, private remittanceService: RemittanceService) { }
 
   ngOnInit() {
-    this.remittanceService.remittances.subscribe(_remittances =>
-      this.remittances = _remittances);
+    this.remittanceService.remittances.subscribe(_remittances => this.zone.run(() => {
+      console.log(_remittances);
+      this.remittances = _remittances;
+    }));
   }
 
   onRevokeClicked(otpHash) {

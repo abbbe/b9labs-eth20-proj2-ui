@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, NgZone } from '@angular/core';
 import { RemittanceService } from '../remittance.service';
 import { Subject } from 'rxjs/Subject';
 import { Web3Service } from '../web3.service';
@@ -16,23 +16,28 @@ export class EthDashboardComponent implements OnInit {
   contractAddress: string;
   contractOwnerAddress: string;
 
-  constructor(private web3Service: Web3Service, private remittanceService: RemittanceService) { }
+  constructor(private zone: NgZone, private web3Service: Web3Service, private remittanceService: RemittanceService) { }
 
   ngOnInit() {
-    this.web3Service.networkId.subscribe(_networkId =>
-      this.networkId = _networkId);
+    this.web3Service.networkId.subscribe(_networkId => this.zone.run(() => 
+      this.networkId = _networkId));
 
-    this.web3Service.accountAddress.subscribe(_accountAddress =>
+    this.web3Service.accountAddress.subscribe(_accountAddress => this.zone.run(() => 
       this.accountAddress = _accountAddress
-    );
+    ));
 
-    this.web3Service.accountBalance.subscribe(_accountBalance =>
+    this.web3Service.accountBalance.subscribe(_accountBalance => this.zone.run(() => 
       this.accountBalance = _accountBalance
-    );
+    ));
 
-    this.remittanceService.contractInfo.subscribe(_contractInfo => {
+    this.web3Service.lastBlock.subscribe(_lastBlock => this.zone.run(() => {
+      console.log(_lastBlock);
+      this.lastBlock = _lastBlock;
+    }));
+
+    this.remittanceService.contractInfo.subscribe(_contractInfo => this.zone.run(() => {
       this.contractAddress = _contractInfo.address;
       this.contractOwnerAddress = _contractInfo.address;
-    });
+    }));
   }
 }
