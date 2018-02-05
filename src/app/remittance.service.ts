@@ -13,9 +13,9 @@ export class Remittance {
     public amount: any, // BigNumber
     public otpHash: string) { }
 
-  // public getAmountEth() {
-  //   return window.web3.fromWei(this.amount, 'ether');
-  // }
+  public getAmountEth() {
+    return window.web3.fromWei(this.amount, 'ether');
+  }
 
   public static secretToOtp(secret_hex, _recipient) {
     return window.web3.sha3(secret_hex, { encoding: 'hex' });
