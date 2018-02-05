@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, NgZone } from '@angular/core';
 import { Web3Service } from '../web3.service';
 import { RemittanceService, Remittance } from '../remittance.service';
 
@@ -13,8 +13,9 @@ export class NewRemittanceComponent implements OnInit {
   amount: number;
   otpSecret: string;
   busy: any;
+  remitTxState: string;
 
-  constructor(private web3Service: Web3Service, private remittanceService: RemittanceService) { }
+  constructor(private zone: NgZone, private web3Service: Web3Service, private remittanceService: RemittanceService) { }
 
   ngOnInit() {
     this.web3Service.accountAddress.subscribe(_acc => this.sender = _acc);
@@ -28,6 +29,11 @@ export class NewRemittanceComponent implements OnInit {
     let otpHash = Remittance.secretToOtpHash(this.otpSecret, this.recipient);
     let r = new Remittance(this.sender, this.recipient, this.amount, otpHash);
 
-    this.busy = this.remittanceService.remit(r);
+    this.busy = this.remittanceService.remit(r).then(txHash => this.zone.run(() => {
+      this.remitTxState = "Transaction " + txHash + " pending";
+    //   return this.web3Service.getTransactionReceiptMined(txHash);
+    // })).then(receipt => this.zone.run(() => {
+    //   this.remitTxState = "Status: " + receipt.status;
+    }));
   }
 }
