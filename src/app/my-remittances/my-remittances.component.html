@@ -3,7 +3,6 @@
 <div>
   <table class="table">
     <tr>
-      <th>#</th>
       <th>Sender</th>
       <th>Recipient</th>
       <th>Amount</th>
@@ -13,8 +12,7 @@
       <th>Claimed</th>
       <th></th>
     </tr>
-    <tr *ngFor="let r of remittances; let i = index">
-      <td>{{i + 1}}</td>
+    <tr *ngFor="let r of remittances">
       <td>{{r.sender.slice(0, 10)}}</td>
       <td>{{r.recipient.slice(0, 10)}}</td>
       <td>{{r.getAmountEth()}}</td>
