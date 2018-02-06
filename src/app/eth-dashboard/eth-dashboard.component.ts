@@ -15,6 +15,7 @@ export class EthDashboardComponent implements OnInit {
   accountBalance: number;
   contractAddress: string;
   contractOwnerAddress: string;
+  contractBalance: number;
 
   constructor(private zone: NgZone, private web3Service: Web3Service, private remittanceService: RemittanceService) { }
 
@@ -37,6 +38,7 @@ export class EthDashboardComponent implements OnInit {
     this.remittanceService.contractInfo.subscribe(_contractInfo => this.zone.run(() => {
       this.contractAddress = _contractInfo.address;
       this.contractOwnerAddress = _contractInfo.ownerAddress;
+      this.contractBalance = _contractInfo.balance;
     }));
   }
 }

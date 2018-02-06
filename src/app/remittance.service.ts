@@ -36,7 +36,7 @@ export class Remittance {
 
 @Injectable()
 export class RemittanceService {
-  public contractInfo: BehaviorSubject<any> = new BehaviorSubject<any>({ address: "?", ownerAddress: "?" });
+  public contractInfo: BehaviorSubject<any> = new BehaviorSubject<any>({ address: "?", ownerAddress: "?", balance: -1 });
   public remittances: BehaviorSubject<Array<Remittance>> = new BehaviorSubject<Array<Remittance>>([]);
 
   public account;
@@ -51,21 +51,39 @@ export class RemittanceService {
 
       this.startWatching();
 
-      // get address of smartcontract owner
-      return this.instance.owner().then(_owner => {
-        // console.log("Contract owner address:", _owner);
-        this.contractInfo.next({
-          address: this.instance.contract.address,
-          ownerAddress: _owner
-        });
-      });
+      this.getContractInfo().then(_contractInfo => this.contractInfo.next(_contractInfo));
     }).catch(err => {
       // console.log("Cannot find a deployed contract:", err);
-      this.contractInfo.next({
-        address: "#ERROR",
-        ownerAddress: "#ERROR"
-      });
+      this.contractInfo.next({ address: "#ERROR", ownerAddress: "#ERROR", balance: "-1" });
     });
+  }
+
+  private getContractInfo() {
+    // get address of smartcontract owner
+    var owner;
+    return this.instance.owner()
+      .then(_owner => {
+        // console.log("Contract owner address:", _owner);
+        owner = _owner;
+
+        var self = this;
+        return new Promise(function (resolve, reject) {
+          window.web3.eth.getBalance(self.instance.contract.address, (err, _balance) => {
+            if (err) {
+              console.error("Failed to get contract balance", err);
+              resolve({ address: "#ERROR", ownerAddress: "#ERROR", balance: "-1" });
+              return;
+            }
+
+            // console.log("Balance:", _balance)
+            resolve({
+              address: self.instance.contract.address,
+              ownerAddress: _owner,
+              balance: window.web3.fromWei(_balance, 'ether')
+            });
+          });
+        });
+      });
   }
 
   private startWatching() {
