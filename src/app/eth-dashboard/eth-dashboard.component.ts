@@ -36,7 +36,7 @@ export class EthDashboardComponent implements OnInit {
 
     this.remittanceService.contractInfo.subscribe(_contractInfo => this.zone.run(() => {
       this.contractAddress = _contractInfo.address;
-      this.contractOwnerAddress = _contractInfo.address;
+      this.contractOwnerAddress = _contractInfo.ownerAddress;
     }));
   }
 }
