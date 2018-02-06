@@ -12,10 +12,10 @@
     </tr>
     <tr *ngFor="let r of remittances; let i = index">
       <td>{{i + 1}}</td>
-      <td>{{r.sender}}</td>
-      <td>{{r.recipient}}</td>
+      <td>{{r.sender.slice(0, 10)}}</td>
+      <td>{{r.recipient.slice(0, 10)}}</td>
       <td>{{r.getAmountEth()}}</td>
-      <td>{{r.otpHash}}</td>
+      <td>{{r.otpHash.slice(0, 10)}}</td>
       <td>
         <button (click)="onRevokeClicked(r.otpHash)">Revoke</button>
       </td>
