@@ -8,7 +8,6 @@ import { RemittanceService, Remittance } from '../remittance.service';
   styleUrls: ['./new-remittance.component.css']
 })
 export class NewRemittanceComponent implements OnInit {
-  sender: string;
   recipient: string;
   amount: number;
   otpSecret: string;
@@ -18,7 +17,6 @@ export class NewRemittanceComponent implements OnInit {
   constructor(private zone: NgZone, private web3Service: Web3Service, private remittanceService: RemittanceService) { }
 
   ngOnInit() {
-    this.web3Service.accountAddress.subscribe(_acc => this.sender = _acc);
   }
 
   onNewRemittanceClick(): void {
@@ -26,18 +24,18 @@ export class NewRemittanceComponent implements OnInit {
     // FIXME validate user input
 
     let otpHash = Remittance.secretToOtpHash(this.otpSecret, this.recipient);
-    let r = new Remittance(this.sender, this.recipient, this.amount, otpHash);
+    let r = new Remittance(this.remittanceService.account, this.recipient, this.amount, otpHash);
 
     var txHash;
     this.busy = this.remittanceService.remit(r)
       .then(_txHash => this.zone.run(() => {
         txHash = _txHash;
-        this.remitTxState = "Transaction " + txHash + " pending";
+        this.remitTxState = "Remit tx " + txHash + " is pending";
 
         // leave "background" promise
         this.web3Service.getTransactionReceiptMined(txHash)
           .then(receipt => this.zone.run(() => {
-            this.remitTxState = "Transaction " + txHash + " mined, status: " + receipt.status;
+            this.remitTxState = "Remit tx " + txHash + " is mined, status: " + receipt.status;
           }));
       }))
       .catch(err => alert(err));

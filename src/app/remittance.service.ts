@@ -32,6 +32,7 @@ export class RemittanceService {
   public contractInfo: BehaviorSubject<any> = new BehaviorSubject<any>({ address: "?", ownerAddress: "?" });
   public remittances: BehaviorSubject<Array<Remittance>> = new BehaviorSubject<Array<Remittance>>([]);
 
+  public account;
   private instance;
   private remittanceList: Array<Remittance> = new Array<Remittance>();
 
@@ -100,11 +101,17 @@ export class RemittanceService {
           this.useContract(remittanceTruffleContract);
         }).catch(err => console.log(err)); // something went wrong while loading truffle-contract
       }).catch(err => console.log(err)); // something went wrong while loading JSON
+
+    this.web3Service.accountAddress.subscribe(_acc => this.account = _acc);
   }
 
   public remit(r: Remittance) {
     let amount = window.web3.toWei(r.amount, 'ether');
     return this.instance.remit.sendTransaction(r.otpHash, r.recipient,
       { from: r.sender, value: amount });
+  }
+
+  public revoke(otpHash: string) {
+    return this.instance.revoke.sendTransaction(otpHash, { from: this.account });
   }
 }
