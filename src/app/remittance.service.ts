@@ -7,6 +7,13 @@ import { Web3Service } from './web3.service';
 declare var System: any;
 
 export class Remittance {
+  public created: number;
+  public revoked: number;
+  public claimed: number;
+
+  public isRevokable() { return !this.revoked && !this.claimed; }
+  public isClaimable() { return !this.revoked && !this.claimed; }
+
   constructor(
     public sender: string,
     public recipient: string,
@@ -63,31 +70,74 @@ export class RemittanceService {
 
   private startWatching() {
     this.web3Service.accountAddress.subscribe(acc => {
-      this.startWatchingRemittances(acc);
-      // this.startWatchingClaims(acc);
+      this.startWatchingMyRemittances({ sender: acc });
+      this.startWatchingMyRemittances({ recipient: acc });
+      // TODO: watch for LogKill
     });
   }
 
-  private startWatchingRemittances(account: string) {
-    // console.log("Watching for LogRemittance for sender", account);
-    this.instance.LogRemittance({ sender: account }, { fromBlock: 0 })
+  private startWatchingMyRemittances(filter) {
+    this.instance.LogRemittance(filter, { fromBlock: 0 })
       .watch((err, event) => {
         if (err) {
           console.log("Error watching for LogRemittance");
           return;
         }
-        this.handleSenderEvent(event);
+        this.handleEvent(event);
+      });
+      this.instance.LogRevoke(filter, { fromBlock: 0 })
+      .watch((err, event) => {
+        if (err) {
+          console.log("Error watching for LogRevoke");
+          return;
+        }
+        this.handleEvent(event);
+      });
+      this.instance.LogClaim(filter, { fromBlock: 0 })
+      .watch((err, event) => {
+        if (err) {
+          console.log("Error watching for LogClaim");
+          return;
+        }
+        this.handleEvent(event);
       });
   }
 
-  private handleSenderEvent(event) {
-    if (event.event == "LogRemittance") {
-      let r = new Remittance(event.args.sender, event.args.recipient, event.args.amount, event.args.otpHash);
-      this.remittanceList.push(r);
-      this.remittances.next(this.remittanceList); // throttle?
-    } else {
-      console.log("Unhandled event:", event);
+  private handleEvent(event) {
+    let newR = false;
+    let r = this.remittanceList.find(_r => (_r.otpHash == event.args.otpHash));
+    if (!r) {
+      r = new Remittance(event.args.sender, event.args.recipient, event.args.amount, event.args.otpHash);
+      newR = true;
     }
+
+    if (event.event == "LogRemittance") {
+      if (r.created && r.created != event.blockNumber) {
+        console.error('Duplicate LogRemittance otpHash', event.args.otpHash);
+        return;
+      }
+      r.created = event.blockNumber;
+    } else if (event.event == "LogRevoke") {
+      if (r.revoked && r.revoked != event.blockNumber) {
+        console.error('Duplicate LogRevoke otpHash', event.args.otpHash);
+        return;
+      }
+      r.revoked = event.blockNumber;
+    } else if (event.event == "LogClaim") {
+      if (r.claimed && r.claimed != event.blockNumber) {
+        console.error('Duplicate LogClaim otpHash', event.args.otpHash);
+        return;
+      }
+      r.claimed = event.blockNumber;
+    } else {
+      console.error("Unexpected event:", event);
+      return;
+    }
+
+    if (newR) {
+      this.remittanceList.push(r);
+    }
+    this.remittances.next(this.remittanceList); // throttle?
   }
 
   constructor(private web3Service: Web3Service) {

@@ -8,6 +8,9 @@
       <th>Recipient</th>
       <th>Amount</th>
       <th>OTP Hash</th>
+      <th>Created</th>
+      <th>Revoked</th>
+      <th>Claimed</th>
       <th></th>
     </tr>
     <tr *ngFor="let r of remittances; let i = index">
@@ -16,8 +19,11 @@
       <td>{{r.recipient.slice(0, 10)}}</td>
       <td>{{r.getAmountEth()}}</td>
       <td>{{r.otpHash.slice(0, 10)}}</td>
+      <td>{{r.created}}</td>
+      <td>{{r.revoked}}</td>
+      <td>{{r.claimed}}</td>
       <td>
-        <button (click)="onRevokeClicked(r.otpHash)">Revoke</button>
+        <button [disabled]="!r.isRevokable()" (click)="onRevokeClicked(r.otpHash)">Revoke</button>
       </td>
     </tr>
   </table>
