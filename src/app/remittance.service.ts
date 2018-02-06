@@ -85,7 +85,7 @@ export class RemittanceService {
         }
         this.handleEvent(event);
       });
-      this.instance.LogRevoke(filter, { fromBlock: 0 })
+    this.instance.LogRevoke(filter, { fromBlock: 0 })
       .watch((err, event) => {
         if (err) {
           console.log("Error watching for LogRevoke");
@@ -93,7 +93,7 @@ export class RemittanceService {
         }
         this.handleEvent(event);
       });
-      this.instance.LogClaim(filter, { fromBlock: 0 })
+    this.instance.LogClaim(filter, { fromBlock: 0 })
       .watch((err, event) => {
         if (err) {
           console.log("Error watching for LogClaim");
@@ -134,9 +134,39 @@ export class RemittanceService {
       return;
     }
 
+    // add new record
     if (newR) {
       this.remittanceList.push(r);
     }
+
+    // sort by creation block number
+    this.remittanceList = this.remittanceList.sort((r1, r2) => {
+      // uncreated will drift on top
+      if (r1.created && !r2.created) {
+        return -1;
+      }
+      if (!r1.created && r2.created) {
+        return 1;
+      }
+
+      // created are ordered by block
+      if (r1.created > r2.created) {
+        return -1;
+      }
+      if (r1.created < r2.created) {
+        return 1;
+      }
+
+      // two uncreated or within the same block block - ordered by otpHash
+      if (r1.otpHash > r2.otpHash) {
+        return -1;
+      }
+      if (r1.otpHash < r2.otpHash) {
+        return 1;
+      }
+      console.error("Dupliated entries, otpHash:", r1.otpHash)
+    });
+
     this.remittances.next(this.remittanceList); // throttle?
   }
 
