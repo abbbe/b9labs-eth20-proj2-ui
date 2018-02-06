@@ -1,8 +1,10 @@
 <h2>New Claim</h2>
 <div>
   <label>OTP Secret:
-    <input (input)='otpSecret = $event.target.value' placeholder="Secret passphrase"/>
+    <input (input)='otpSecret_claim = $event.target.value' placeholder="Secret passphrase" />
   </label>
 
   <button (click)="onNewClaimClick()">New Claim</button>
+
+  <div>{{remitTxState}}</div>
 </div>

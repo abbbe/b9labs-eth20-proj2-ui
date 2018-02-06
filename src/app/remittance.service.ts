@@ -24,12 +24,12 @@ export class Remittance {
     return window.web3.fromWei(this.amount, 'ether');
   }
 
-  public static secretToOtp(secret_hex, _recipient) {
+  public static secretToOtp(secret_hex) {
     return window.web3.sha3(secret_hex, { encoding: 'hex' });
   }
 
   public static secretToOtpHash(secret_hex, recipient) {
-    var otpValue = this.secretToOtp(secret_hex, recipient);
+    var otpValue = this.secretToOtp(secret_hex);
     return window.web3.sha3(otpValue + recipient.replace("0x", ""), { encoding: 'hex' });
   }
 }
@@ -193,5 +193,9 @@ export class RemittanceService {
 
   public revoke(otpHash: string) {
     return this.instance.revoke.sendTransaction(otpHash, { from: this.account });
+  }
+
+  public claim(otpValue: string) {
+    return this.instance.claim.sendTransaction(otpValue, { from: this.account });
   }
 }
