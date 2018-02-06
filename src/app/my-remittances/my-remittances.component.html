@@ -21,7 +21,7 @@
       <td>{{r.revoked}}</td>
       <td>{{r.claimed}}</td>
       <td>
-        <button [disabled]="!r.isRevokable()" (click)="onRevokeClicked(r.otpHash)">Revoke</button>
+        <button [hidden]="!r.isRevokable()" (click)="onRevokeClicked(r.otpHash)">Revoke</button>
       </td>
     </tr>
   </table>
